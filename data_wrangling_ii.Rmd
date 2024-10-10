@@ -1,0 +1,49 @@
+---
+title: "data_wrangling II"
+author: "Jiayi"
+date: "2024-10-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(rvest)
+library(httr)
+
+```
+
+## National  
+```{r }
+url = "http://samhda.s3-us-gov-west-1.amazonaws.com/s3fs-public/field-uploads/2k15StateFiles/NSDUHsaeShortTermCHG2015.htm"
+drug_use_html = read_html(url)
+
+drug_use_html
+```
+
+Let’s try our luck extracting the tables from the HTML.
+
+Get the contents from the first list element.
+
+I won’t print the table here, but if you look at it you’ll notice a problem: the “note” at the bottom of the table appears in every column in the first row. We need to remove that…
+```{r}
+marj_use_df = 
+  drug_use_html %>% 
+  html_table() %>% 
+  first() %>% 
+  slice(-1)
+```
+
+
+```{r practice }
+url_place = "https://www.bestplaces.net/cost_of_living/city/new_york/new_york"
+place_html = read_html(url_place)
+place_df = 
+  place_html %>% 
+  html_table(header = TRUE) %>% 
+  first()
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
